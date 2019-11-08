@@ -1,6 +1,11 @@
 /* Under PRESSure!
  * 
- * This is 
+ * !!!!!!!!!!!!!!!
+ * CAUTION: ensure that timing setting on this sketch are matched with the timing setting in the Python GUI script!!!
+ * 
+ * This is an incredibly simple Arduino-based game with Python GUI running on a computer.  
+ * The Arduino board receives players' input and sends the data to over USB (serial) to the computer running
+ * the GUI. The computer (or rather, the GUI) simply serves as a "scoreboard".
  * 
  *------------------------------------------------------------------------------------------
  * CURRENT LIMITATION:
