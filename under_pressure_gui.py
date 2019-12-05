@@ -42,12 +42,13 @@ time = TIME_LIMIT
 def reset_time():
     global time
     time = TIME_LIMIT
-    time_left.config(text = "Time: {} seconds".format(time/1000))
+    time_left.config(text = "Time: {:.2f} seconds".format(time/1000))
 
     arduino.reset_input_buffer()     # Flush buffer.
 
     reset_button.config(state=DISABLED)
-    display.after(20, update_score)    # Check serial immediately (start polling).
+    quit_button.config(state=DISABLED)
+    display.after(10, update_score)    # Check serial immediately (start polling).
 
 
 def reset_score():
@@ -82,10 +83,16 @@ def update_score():
         time_left.config(text = "Time's out! Next please!")
         display.after(WAIT - 100, reset_time)   # Reset the time display.
         reset_button.config(state = NORMAL)
+        quit_button.config(state = NORMAL) 
     else:
-        time_left.config(text = "Time: {} seconds".format(time/1000))
-        display.after(90, update_score)
+        time_left.config(text = "Time: {:.2f} seconds".format(time/1000))
+        display.after(UPDATE_RATE - 10, update_score)
         # Check serial again shortly (for continuous score update).
+
+         
+# Quit game (kill the GUI).
+def quit():
+    display.destroy()
 
 ###################### GUI Setup ######################
 
@@ -110,17 +117,19 @@ score_1_label.grid(row = 3, column = 0)
 score_2 = Label(text = 0, fg = "red", bg = 'white', font=("Calibri", SCORE_SIZE))
 score_2.grid(row = 2, column = 1, sticky=W+E+N+S)
 score_2_label = Label(text = "           Team 2           ",\
-                    fg = "red", font=("Calibri", FONT_SIZE))
+                      fg = "red", font=("Calibri", FONT_SIZE))
 score_2_label.grid(row = 3, column = 1)
 
-# Button to reset score.
+# Button to reset score and quit window.
 reset_button = Button(text = 'Reset Score', command = reset_score, width = 20, state = NORMAL)
-reset_button.grid(row = 4, columnspan = 2, sticky=N+S)
+reset_button.grid(row = 4, column = 0, sticky=N+S+E, padx = 20)
+quit_button = Button(text = 'Quit Game', command = quit, width = 20, state = NORMAL)
+quit_button.grid(row = 4, column = 1, sticky=N+S+W, padx = 20)
 
 
 #############################################################################
 
-display.after(INITIAL_WAIT + 200, reset_time)
+display.after(INITIAL_WAIT + 1200, reset_time)
 # Initial call for score_update().
 
 display.mainloop()   # Launch GUI.
